@@ -1,9 +1,9 @@
-export const questionDict = {"Question 1": ["flags", "frames", "A1-8"],
-                      "Question 2": ["flags", "frames", "B1-8"],
-                      "Question 3": ["flags", "frames", "C1-8"],
-                      "Question 4": ["flags", "frames", "D1-8"],
-                      "Question 5": ["flags", "frames", "E1-8"],
-                      "Question 6": ["flags", "frames", "F1-8"]};
+export const questionDict = {"Question 1, Preferences A1-8": ["flags", "frames", "A1-8"],
+                             "Question 2, Preferences B1-8": ["flags", "frames", "B1-8"],
+                             "Question 3, Preferences C1-8": ["flags", "frames", "C1-8"],
+                             "Question 4, Preferences D1-8": ["flags", "frames", "D1-8"],
+                             "Question 5, Preferences E1-8": ["flags", "frames", "E1-8"],
+                             "Question 6, Preferences F1-8": ["flags", "frames", "F1-8"]};
 
 
 
@@ -146,26 +146,17 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
     }
 }
 
-
-
-
 export async function displayWinnerImages(winnerImages, name) {
     
     // console.log(`These are the winner images inside displayWinnerImages: ${winnerImages}`)
-
-    // let imageDiv = document.createElement("div");
-    // imageDiv.style.display = "flex";
-    // imageDiv.style.justifyContent = "center";
-    // imageDiv.style.flexWrap = "wrap";
-
     let image2Div = document.createElement("div");
     image2Div.style.display = "flex";
     image2Div.style.justifyContent = "center";
     image2Div.style.flexWrap = "wrap";
     document.body.appendChild(image2Div);
     let image2 = document.createElement("img");
-    image2.style.width = "200px";
-    image2.style.height = "200px";
+    image2.style.width = "400px";
+    image2.style.height = "300px";
     
     while (image2Div.firstChild) {
         image2Div.removeChild(image2Div.firstChild);
@@ -185,21 +176,6 @@ export async function displayWinnerImages(winnerImages, name) {
         let winnerImage = winnerImages[0];
         if (winnerImage.includes("flag")) {
             name = "flags";}
-        // } else if (winnerImage.includes("frame")) {
-        //     name = "frames";
-        // } else if (winnerImage.includes("A")){
-        //     name = "A1-8";
-        // } else if (winnerImage.includes("B")){
-        //     name = "B1-8";
-        // } else if (winnerImage.includes("C")){
-        //     name = "C1-8";
-        // } else if (winnerImage.includes("D")){
-        //     name = "D1-8";
-        // } else if (winnerImage.includes("E")){
-        //     name = "E1-8";
-        // } else if (winnerImage.includes("F")){
-        //     name = "F1-8";
-        // }
         image2.src = `./images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${winnerImage}`;
         image2.alt = winnerImage.slice(5, -4);
         image2.title = winnerImage.slice(5, -4);
@@ -215,12 +191,6 @@ export async function displayWinnerImages(winnerImages, name) {
 image2Div.appendChild(image2);
 document.body.appendChild(image2Div);
 }
-
-
-
-
-
-
 
 
 let imageCache = {};
@@ -271,13 +241,16 @@ export async function combineImages(imageFileNames) {
     mediumImage.height *= 2;
 
     let smallImage = images[2]; // The third image remains the same size
+    if (smallImage)
+    {smallImage.width *= 0.65; 
+    smallImage.height *= 0.65;}
 
     // Calculate the total width and maximum height of the images
     let totalWidth = Math.max(bigImage.width, mediumImage.width, smallImage ? smallImage.width : 0);
     let maxHeight = Math.max(bigImage.height, mediumImage.height, smallImage ? smallImage.height : 0);
 
     // Increase the size of the canvas
-    let scale = 2; // Change this to increase or decrease the size of the canvas
+    let scale = 1; // Change this to increase or decrease the size of the canvas
     canvas.width = totalWidth * scale;
     canvas.height = maxHeight * scale;
 
@@ -290,6 +263,9 @@ export async function combineImages(imageFileNames) {
 
             if (img === smallImage){
                 ctx.globalCompositeOperation = "source-over";
+            }
+            if (img === mediumImage){
+                ctx.globalCompositeOperation = "source-atop";
             }
 
             ctx.drawImage(img, xOffset, yOffset, img.width * scale, img.height * scale);

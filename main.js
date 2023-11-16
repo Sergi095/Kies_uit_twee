@@ -3,6 +3,9 @@ import { getImages, displayImages, displayWinnerImages, questionDict } from "./h
 
 let answers = {};
 
+
+
+
 async function main() {
     // Get an array of the keys in questionDict
     let questions = Object.keys(questionDict);
@@ -28,6 +31,7 @@ async function main() {
         }
         // Show the button and wait for it to be clicked before continuing
         answers[question] = winnerImages;
+        localStorage.setItem('answers', JSON.stringify(answers));
         console.log(answers);
         let button = document.createElement("button");
         button.textContent = "Next Question";
