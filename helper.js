@@ -8,13 +8,13 @@ export const questionDict = {"Question 1, Preferences A1-8": ["flags", "frames",
 
 
 export const array_names = ["flags", 
-"frames", 
-"A1-8", 
-"B1-8", 
-"C1-8", 
-"D1-8", 
-"E1-8", 
-"F1-8"];
+                            "frames", 
+                            "A1-8", 
+                            "B1-8", 
+                            "C1-8", 
+                            "D1-8", 
+                            "E1-8", 
+                            "F1-8"];
 
 
 export async function getImages(name) {
@@ -51,8 +51,6 @@ function getRandomImage(images) {
     return image;
 }
 
-
-
 // functions to display the images and select the winner
 
 
@@ -61,22 +59,17 @@ export async function displayImages(question,
                               currentImages, 
                               selectedImages,
                               winnerImages) {
-    // Clear the body for new images
-    document.body.innerHTML = '';
-    // Clear the image container for new images
-    // document.getElementById('image-container').innerHTML = '';
 
-    // create an H1 element
-    let h1 = document.createElement("h1");
-    h1.innerHTML = question;
-    document.body.appendChild(h1);
 
-    let imageDiv = document.createElement("div");
+    let imageDiv = document.getElementById("image-container");
     imageDiv.style.display = "flex";
     imageDiv.style.justifyContent = "center";
     imageDiv.style.flexWrap = "nowrap";
     imageDiv.style.overflowX = "auto";
 
+    // let container = document.getElementById("image-container");
+    // // container.innerHTML = "";
+    // container.appendChild(imageDiv);
 
     // Display the winner image if there is one but only after the currentImages array is exhausted
 
@@ -105,10 +98,12 @@ export async function displayImages(question,
         image.addEventListener("click", handleClick(question, name, currentImages, selectedImages, winnerImages));
         image.style.width = "100px";
         image.style.height = "100px";
+        image.style.marginRight = "10px"; // Add margin to space out the images
+        image.style.opacity = "0.8"; // Set the opacity to 0.8 to make the background more transparent
         imageDiv.appendChild(image);
     });
 
-    document.body.appendChild(imageDiv);
+    // document.body.appendChild(imageDiv);
 }
 
 
@@ -148,19 +143,23 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
 
 export async function displayWinnerImages(winnerImages, name) {
     
+    // document.getElementById("winner-image-container").innerHTML = '';
+
     // console.log(`These are the winner images inside displayWinnerImages: ${winnerImages}`)
-    let image2Div = document.createElement("div");
-    image2Div.style.display = "flex";
-    image2Div.style.justifyContent = "center";
-    image2Div.style.flexWrap = "wrap";
-    document.body.appendChild(image2Div);
+    let image2Div = document.querySelector("#winner-image-container");
+    if (!image2Div) {
+        image2Div = document.createElement("div");
+        image2Div.id = "winner-image-container";
+        document.body.appendChild(image2Div);
+    }
     let image2 = document.createElement("img");
     image2.style.width = "400px";
     image2.style.height = "300px";
-    
     while (image2Div.firstChild) {
         image2Div.removeChild(image2Div.firstChild);
     }
+    image2Div.appendChild(image2);
+    
     
 
     if (!winnerImages || winnerImages.length === 0) { 
@@ -189,7 +188,7 @@ export async function displayWinnerImages(winnerImages, name) {
         image2.title = 'Combined image';
 }
 image2Div.appendChild(image2);
-document.body.appendChild(image2Div);
+// document.body.appendChild(image2Div);
 }
 
 
@@ -259,21 +258,18 @@ export async function combineImages(imageFileNames) {
         if (img) {
             let xOffset = (canvas.width - img.width * scale) / 2;
             let yOffset = (canvas.height - img.height * scale) / 2;
-
-
             if (img === smallImage){
                 ctx.globalCompositeOperation = "source-over";
             }
             if (img === mediumImage){
                 ctx.globalCompositeOperation = "source-atop";
             }
-
             ctx.drawImage(img, xOffset, yOffset, img.width * scale, img.height * scale);
         }
     }
 
     // Return the data URL of the canvas as the combined image
-    let dataUrl = canvas.toDataURL();
+    let dataUrl = canvas.toDataURL(0.5);
     imageCache[cacheKey] = dataUrl;
     return dataUrl;
 }

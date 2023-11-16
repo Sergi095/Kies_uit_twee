@@ -37,4 +37,12 @@ h1 {
     height: 50px;
     margin: auto; /* center the image */
 }
-/* */
+
+/* #button-container {
+    display: block;
+    position: relative;
+    bottom: 100%;
+    left: 10%;
+    right: 10%;
+    transform: translate(-50%, -50%);
+} */

@@ -5,9 +5,11 @@ let answers = {};
 
 
 
-
-async function main() {
+export async function startMain() {
     // Get an array of the keys in questionDict
+    
+
+
     let questions = Object.keys(questionDict);
 
 
@@ -15,11 +17,27 @@ async function main() {
     for (let question of questions) {
         let categories = questionDict[question];
         let winnerImages = [];
+        
+        
+
+
+        // document.body.innerHTML = '';
+        document.getElementById('question').innerHTML = '';
+        
+        // create an H1 element
+        let h1 = document.createElement("h1");
+        h1.innerHTML = question;
+        document.getElementById("question").innerHTML = '';
+        document.getElementById("question").appendChild(h1);
+
+        
         for (let name of categories) {
             displayWinnerImages();
+            // document.getElementById('image-container').innerHTML = '';
             let currentImages = await getImages(name);
             // console.log(currentImages);
             let selectedImages = [];
+            document.getElementById("image-container").innerHTML = '';
             displayImages(question, name, currentImages, selectedImages, winnerImages);
 
             // Wait for currentImages to be exhausted
@@ -44,13 +62,18 @@ async function main() {
         document.body.appendChild(button);
         let images = document.querySelectorAll('img');
         images.forEach(img => img.setAttribute('disabled', ''));
-    
+        
         await new Promise(resolve => button.onclick = resolve);
-  
+        button.remove();
         
     }
 
+        
+
 }
 
-main()
+startMain();
+
+
+
 
