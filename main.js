@@ -3,7 +3,6 @@ import { getImages, displayImages, displayWinnerImages, questionDict } from "./h
 
 let answers = {};
 
-
 async function main() {
     // Get an array of the keys in questionDict
     let questions = Object.keys(questionDict);
@@ -33,18 +32,18 @@ async function main() {
         let button = document.createElement("button");
         button.textContent = "Next Question";
         button.style.display = "block";
-        // button.style.position = "absolute";
         button.style.position = "bottom"; // Change position to relative
-        // button.style.marginTop = "20px"; // Add some space at the top
-        // button.style.top = "50%";
         button.style.bottom = "100%"; // Change top to bottom
         button.style.left = "10%";
         button.style.right = "10%";
         button.style.transform = "translate(20%, 50%)";
         document.body.appendChild(button);
+        let images = document.querySelectorAll('img');
+        images.forEach(img => img.setAttribute('disabled', ''));
+    
         await new Promise(resolve => button.onclick = resolve);
+  
         
-
     }
 
 }

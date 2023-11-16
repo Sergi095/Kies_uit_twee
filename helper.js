@@ -117,6 +117,9 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
 
     return function (event) {
         // Get the id of the clicked image
+        if (event.target.getAttribute('disabled') !== null) {
+            return;
+        }
         let id = event.target.id;
         // console.log(id);
         let unselectedImageIndex = selectedImages.findIndex(img => img !== event.target.id);
