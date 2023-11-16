@@ -56,33 +56,36 @@ function getRandomImage(images) {
 // functions to display the images and select the winner
 
 
-export function displayImages(question, 
+export async function displayImages(question, 
                               name, 
                               currentImages, 
                               selectedImages,
                               winnerImages) {
     // Clear the body for new images
     document.body.innerHTML = '';
+    // Clear the image container for new images
+    // document.getElementById('image-container').innerHTML = '';
 
     // create an H1 element
     let h1 = document.createElement("h1");
     h1.innerHTML = question;
     document.body.appendChild(h1);
 
-
-
     let imageDiv = document.createElement("div");
     imageDiv.style.display = "flex";
     imageDiv.style.justifyContent = "center";
-    imageDiv.style.flexWrap = "wrap";
+    imageDiv.style.flexWrap = "nowrap";
+    imageDiv.style.overflowX = "auto";
+
 
     // Display the winner image if there is one but only after the currentImages array is exhausted
 
     if (winnerImages.length !== 0) {
-        displayWinnerImages(winnerImages[winnerImages.length - 1], name);
-        console.log("No more images to select from.");
+        // displayWinnerImages(winnerImages[winnerImages.length - 1], name);
+        await displayWinnerImages(winnerImages, name);
+        // console.log("No more images to select from.");
     } else { 
-        displayWinnerImages();
+        await displayWinnerImages();
     }
 
     // Initialize selectedImages with 2 random images
@@ -107,6 +110,8 @@ export function displayImages(question,
 
     document.body.appendChild(imageDiv);
 }
+
+
 
 function handleClick(question, name, currentImages, selectedImages, winnerImages) {
 
@@ -139,49 +144,163 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
 }
 
 
-export function displayWinnerImages(winnerImage, name) {
-    
-    let imageDiv = document.createElement("div");
-    imageDiv.style.display = "flex";
-    imageDiv.style.justifyContent = "center";
-    imageDiv.style.flexWrap = "wrap";
 
-    let image = document.createElement("img");
-    image.style.width = "100px";
-    image.style.height = "100px";
-    imageDiv.appendChild(image);
 
+export async function displayWinnerImages(winnerImages, name) {
     
-    if (winnerImage) {
-        
-        if (winnerImage.includes("flag")) {
-            name = "flags";
-        } else if (winnerImage.includes("frame")) {
-            name = "frames";
-        } else if (winnerImage.includes("A")){
-            name = "A1-8";
-        } else if (winnerImage.includes("B")){
-            name = "B1-8";
-        } else if (winnerImage.includes("C")){
-            name = "C1-8";
-        } else if (winnerImage.includes("D")){
-            name = "D1-8";
-        } else if (winnerImage.includes("E")){
-            name = "E1-8";
-        } else if (winnerImage.includes("F")){
-            name = "F1-8";
-        }
-        image.src = `./images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${winnerImage}`;
-        image.alt = winnerImage.slice(5, -4);
-        image.title = winnerImage.slice(5, -4);
-    } else {
+    console.log(`These are the winner images inside displayWinnerImages: ${winnerImages}`)
+
+    // let imageDiv = document.createElement("div");
+    // imageDiv.style.display = "flex";
+    // imageDiv.style.justifyContent = "center";
+    // imageDiv.style.flexWrap = "wrap";
+
+    let image2Div = document.createElement("div");
+    image2Div.style.display = "flex";
+    image2Div.style.justifyContent = "center";
+    image2Div.style.flexWrap = "wrap";
+    document.body.appendChild(image2Div);
+    let image2 = document.createElement("img");
+    image2.style.width = "200px";
+    image2.style.height = "200px";
+    
+    while (image2Div.firstChild) {
+        image2Div.removeChild(image2Div.firstChild);
+    }
+    
+
+    if (!winnerImages || winnerImages.length === 0) { 
         // Set the source to an empty image placeholder
-        image.src = `./images/empty_flag/empty_flag.png`;
-        image.alt = "empty flag";
-        image.title = "empty flag";
+        console.log(`There are no winner images: ${winnerImages}`)
+        image2.src = `./images/empty_flag/empty_flag.png`;
+        image2.alt = "empty flag";
+        image2.title = "empty flag";
+    }
+    if (winnerImages && winnerImages.length === 1) {
+        // Display the single image
+        console.log(`This is the winner image: ${winnerImages}`)
+        let winnerImage = winnerImages[0];
+        if (winnerImage.includes("flag")) {
+            name = "flags";}
+        // } else if (winnerImage.includes("frame")) {
+        //     name = "frames";
+        // } else if (winnerImage.includes("A")){
+        //     name = "A1-8";
+        // } else if (winnerImage.includes("B")){
+        //     name = "B1-8";
+        // } else if (winnerImage.includes("C")){
+        //     name = "C1-8";
+        // } else if (winnerImage.includes("D")){
+        //     name = "D1-8";
+        // } else if (winnerImage.includes("E")){
+        //     name = "E1-8";
+        // } else if (winnerImage.includes("F")){
+        //     name = "F1-8";
+        // }
+        image2.src = `./images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${winnerImage}`;
+        image2.alt = winnerImage.slice(5, -4);
+        image2.title = winnerImage.slice(5, -4);
+    }
+    if (winnerImages && winnerImages.length > 1) {
+        // Combine the images
+        console.log(`These are the winner images: ${winnerImages}`)
+        let combinedImageSrc = await combineImages(winnerImages);
+        image2.src = combinedImageSrc;
+        image2.alt = 'Combined image';
+        image2.title = 'Combined image';
+}
+image2Div.appendChild(image2);
+document.body.appendChild(image2Div);
+}
+
+
+
+
+
+
+
+
+let imageCache = {};
+
+export async function combineImages(imageFileNames) {
+    let cacheKey = imageFileNames.join(',');
+    if (imageCache[cacheKey]) {
+        return imageCache[cacheKey];
     }
 
-    document.body.appendChild(imageDiv);
+    // Create new image elements
+    let images = await Promise.all(imageFileNames.map(async fileName => {
+        let img = new Image();
+        let name = "";
+        if (fileName.includes("flag")) {
+            name = "flags";
+        } else if (fileName.includes("frame")) {
+            name = "frames";
+        } else if (fileName.includes("A")) {
+            name = "A1-8";
+        } else if (fileName.includes("B")) {
+            name = "B1-8";
+        } else if (fileName.includes("C")) {
+            name = "C1-8";
+        } else if (fileName.includes("D")) {
+            name = "D1-8";
+        } else if (fileName.includes("E")) {
+            name = "E1-8";
+        } else if (fileName.includes("F")) {
+            name = "F1-8";
+        }
+        img.src = `./images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${fileName}`;
+        await new Promise(resolve => { img.onload = resolve; }); // Wait for image to load
+        return img;
+    }));
+
+    // Create a canvas element
+    let canvas = document.createElement('canvas');
+    let ctx = canvas.getContext('2d');
+
+    // Adjust the size of the images
+    let bigImage = images[0];
+    bigImage.width *= 2; // Double the size of the first image
+    bigImage.height *= 2;
+
+    let mediumImage = images[1];
+    mediumImage.width *= 2; // Increase the size of the second image by 50%
+    mediumImage.height *= 2;
+
+    let smallImage = images[2]; // The third image remains the same size
+
+    // Calculate the total width and maximum height of the images
+    let totalWidth = Math.max(bigImage.width, mediumImage.width, smallImage ? smallImage.width : 0);
+    let maxHeight = Math.max(bigImage.height, mediumImage.height, smallImage ? smallImage.height : 0);
+
+    // Increase the size of the canvas
+    let scale = 2; // Change this to increase or decrease the size of the canvas
+    canvas.width = totalWidth * scale;
+    canvas.height = maxHeight * scale;
+
+    // Draw the images onto the canvas
+    for (let img of [bigImage, mediumImage, smallImage]) {
+        if (img) {
+            let xOffset = (canvas.width - img.width * scale) / 2;
+            let yOffset = (canvas.height - img.height * scale) / 2;
+
+
+            if (img === smallImage){
+                ctx.globalCompositeOperation = "source-over";
+            }
+
+            ctx.drawImage(img, xOffset, yOffset, img.width * scale, img.height * scale);
+        }
+    }
+
+    // Return the data URL of the canvas as the combined image
+    let dataUrl = canvas.toDataURL();
+    imageCache[cacheKey] = dataUrl;
+    return dataUrl;
+}
+
+export function clearImageCache() {
+    imageCache = {};
 }
 
 
