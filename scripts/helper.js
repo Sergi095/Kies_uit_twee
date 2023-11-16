@@ -22,13 +22,13 @@ export async function getImages(name) {
 let images = [];
 if (array_names.includes(name)) {
     if (name == "flags" || name == "frames") {
-        const response = await fetch(`./images/${name}/${name}_list.json`);
+        const response = await fetch(`../images/${name}/${name}_list.json`);
         const data = await response.json();
         data.forEach(element => {
             images.push(element.name);
         });
     } else {
-        const response = await fetch(`./images/pictos/${name}/${name}_list.json`);
+        const response = await fetch(`../images/pictos/${name}/${name}_list.json`);
         const data = await response.json();
 
         data.forEach(element => {
@@ -86,20 +86,20 @@ export async function displayImages(question,
         selectedImages.push(getRandomImage(currentImages));
         selectedImages.push(getRandomImage(currentImages));
     }
-
-    // Display the images in selectedImages
-
+    
     selectedImages.forEach(img => {
         let image = document.createElement("img");
-        image.src = `./images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${img}`;
+        image.src = `../images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${img}`;
         image.id = img;
         image.alt = img.slice(5, -4);
         image.title = img.slice(5, -4);
         image.addEventListener("click", handleClick(question, name, currentImages, selectedImages, winnerImages));
         image.style.width = "100px";
         image.style.height = "100px";
+        image.style.border = '2px solid black';
         image.style.marginRight = "10px"; // Add margin to space out the images
         image.style.opacity = "0.8"; // Set the opacity to 0.8 to make the background more transparent
+        image.style.borderRadius = "10px"; // Add rounded corners to the images
         imageDiv.appendChild(image);
     });
 
@@ -125,6 +125,7 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
             winnerImages.push(id);
         }
 
+
         // Remove the image from selectedImages
         if (currentImages.length > 0) {
             selectedImages[unselectedImageIndex] = getRandomImage(currentImages);
@@ -140,6 +141,9 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
         displayImages(question, name, currentImages, selectedImages, winnerImages);
     }
 }
+
+
+
 
 export async function displayWinnerImages(winnerImages, name) {
     
@@ -161,11 +165,12 @@ export async function displayWinnerImages(winnerImages, name) {
     image2Div.appendChild(image2);
     
     
-
+    let loadingImage = new Image();
+    loadingImage.src = '../images/loading_gif/loading-icon.gif';
     if (!winnerImages || winnerImages.length === 0) { 
         // Set the source to an empty image placeholder
         // console.log(`There are no winner images: ${winnerImages}`)
-        image2.src = `./images/empty_flag/empty_flag.png`;
+        image2.src = `../images/empty_flag/empty_flag.png`;
         image2.alt = "empty flag";
         image2.title = "empty flag";
     }
@@ -175,19 +180,29 @@ export async function displayWinnerImages(winnerImages, name) {
         let winnerImage = winnerImages[0];
         if (winnerImage.includes("flag")) {
             name = "flags";}
-        image2.src = `./images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${winnerImage}`;
+
+        image2.src = `../images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${winnerImage}`;
         image2.alt = winnerImage.slice(5, -4);
         image2.title = winnerImage.slice(5, -4);
     }
     if (winnerImages && winnerImages.length > 1) {
         // Combine the images
         // console.log(`These are the winner images: ${winnerImages}`)
+        // Show loading animation
+        image2.src = loadingImage.src;
+        image2.style.width = "100px";
+        image2.style.height = "100px";
+        // loadingAnimation.style.display = 'block';
         let combinedImageSrc = await combineImages(winnerImages);
+        // Hide loading animation
+        // loadingAnimation.style.display = 'none';
         image2.src = combinedImageSrc;
         image2.alt = 'Combined image';
         image2.title = 'Combined image';
 }
 image2Div.appendChild(image2);
+image2.style.width = "400px";
+image2.style.height = "300px";
 // document.body.appendChild(image2Div);
 }
 
@@ -221,10 +236,11 @@ export async function combineImages(imageFileNames) {
         } else if (fileName.includes("F")) {
             name = "F1-8";
         }
-        img.src = `./images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${fileName}`;
+        img.src = `../images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${fileName}`;
         await new Promise(resolve => { img.onload = resolve; }); // Wait for image to load
         return img;
     }));
+
 
     // Create a canvas element
     let canvas = document.createElement('canvas');
@@ -232,17 +248,17 @@ export async function combineImages(imageFileNames) {
 
     // Adjust the size of the images
     let bigImage = images[0];
-    bigImage.width *= 2; // Double the size of the first image
-    bigImage.height *= 2;
+    bigImage.width *= 1.5; // Double the size of the first image
+    bigImage.height *= 1.5;
 
     let mediumImage = images[1];
-    mediumImage.width *= 2; // Increase the size of the second image by 50%
-    mediumImage.height *= 2;
+    mediumImage.width *= 1.5; // Increase the size of the second image by 50%
+    mediumImage.height *= 1.5;
 
     let smallImage = images[2]; // The third image remains the same size
     if (smallImage)
-    {smallImage.width *= 0.65; 
-    smallImage.height *= 0.65;}
+    {smallImage.width *= 0.5; 
+    smallImage.height *= 0.5;}
 
     // Calculate the total width and maximum height of the images
     let totalWidth = Math.max(bigImage.width, mediumImage.width, smallImage ? smallImage.width : 0);
@@ -269,7 +285,7 @@ export async function combineImages(imageFileNames) {
     }
 
     // Return the data URL of the canvas as the combined image
-    let dataUrl = canvas.toDataURL(0.5);
+    const dataUrl = canvas.toDataURL(0.5);
     imageCache[cacheKey] = dataUrl;
     return dataUrl;
 }
