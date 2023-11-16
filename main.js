@@ -1,6 +1,8 @@
 import { getImages, displayImages, displayWinnerImages, questionDict } from "./helper.js";
 
 
+let answers = {};
+
 
 async function main() {
     // Get an array of the keys in questionDict
@@ -14,7 +16,7 @@ async function main() {
         for (let name of categories) {
             displayWinnerImages();
             let currentImages = await getImages(name);
-            console.log(currentImages);
+            // console.log(currentImages);
             let selectedImages = [];
             displayImages(question, name, currentImages, selectedImages, winnerImages);
 
@@ -26,6 +28,8 @@ async function main() {
             // displayWinnerImages(winnerImages, name);
         }
         // Show the button and wait for it to be clicked before continuing
+        answers[question] = winnerImages;
+        console.log(answers);
         let button = document.createElement("button");
         button.textContent = "Next Question";
         button.style.display = "block";

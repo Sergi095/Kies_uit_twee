@@ -118,11 +118,11 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
     return function (event) {
         // Get the id of the clicked image
         let id = event.target.id;
-        console.log(id);
+        // console.log(id);
         let unselectedImageIndex = selectedImages.findIndex(img => img !== event.target.id);
 
         // Add the image to the winnerImages array
-        console.log(currentImages.length);
+        // console.log(currentImages.length);
         if (currentImages.length <= 1) {
             winnerImages.push(id);
         }
@@ -137,7 +137,7 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
         // Add a new image to selectedImages
         // selectedImages.push(getRandomImage(currentImages));
         
-        console.log(winnerImages);
+        // console.log(winnerImages);
         // Display the images again
         displayImages(question, name, currentImages, selectedImages, winnerImages);
     }
@@ -148,7 +148,7 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
 
 export async function displayWinnerImages(winnerImages, name) {
     
-    console.log(`These are the winner images inside displayWinnerImages: ${winnerImages}`)
+    // console.log(`These are the winner images inside displayWinnerImages: ${winnerImages}`)
 
     // let imageDiv = document.createElement("div");
     // imageDiv.style.display = "flex";
@@ -171,14 +171,14 @@ export async function displayWinnerImages(winnerImages, name) {
 
     if (!winnerImages || winnerImages.length === 0) { 
         // Set the source to an empty image placeholder
-        console.log(`There are no winner images: ${winnerImages}`)
+        // console.log(`There are no winner images: ${winnerImages}`)
         image2.src = `./images/empty_flag/empty_flag.png`;
         image2.alt = "empty flag";
         image2.title = "empty flag";
     }
     if (winnerImages && winnerImages.length === 1) {
         // Display the single image
-        console.log(`This is the winner image: ${winnerImages}`)
+        // console.log(`This is the winner image: ${winnerImages}`)
         let winnerImage = winnerImages[0];
         if (winnerImage.includes("flag")) {
             name = "flags";}
@@ -203,7 +203,7 @@ export async function displayWinnerImages(winnerImages, name) {
     }
     if (winnerImages && winnerImages.length > 1) {
         // Combine the images
-        console.log(`These are the winner images: ${winnerImages}`)
+        // console.log(`These are the winner images: ${winnerImages}`)
         let combinedImageSrc = await combineImages(winnerImages);
         image2.src = combinedImageSrc;
         image2.alt = 'Combined image';
