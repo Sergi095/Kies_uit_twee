@@ -102,15 +102,14 @@ export async function displayImages(question,
         image.style.borderRadius = "10px"; // Add rounded corners to the images
         imageDiv.appendChild(image);
     });
-
     // document.body.appendChild(imageDiv);
+    return selectedImages;
 }
-
 
 
 function handleClick(question, name, currentImages, selectedImages, winnerImages) {
 
-    return function (event) {
+    return async  function (event) {
         // Get the id of the clicked image
         if (event.target.getAttribute('disabled') !== null) {
             return;
@@ -120,8 +119,8 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
         let unselectedImageIndex = selectedImages.findIndex(img => img !== event.target.id);
 
         // Add the image to the winnerImages array
-        // console.log(currentImages.length);
-        if (currentImages.length <= 1) {
+
+        if (currentImages.length <= 0) {
             winnerImages.push(id);
         }
 
@@ -133,13 +132,17 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
             selectedImages.splice(unselectedImageIndex, 1);
         }
         document.querySelectorAll("img").forEach(img => img.remove());
+        // console.log(currentImages);
+        // console.log(currentImages.length);
+        
         // Add a new image to selectedImages
         // selectedImages.push(getRandomImage(currentImages));
         
         // console.log(winnerImages);
         // Display the images again
-        displayImages(question, name, currentImages, selectedImages, winnerImages);
+        await displayImages(question, name, currentImages, selectedImages, winnerImages);
     }
+    
 }
 
 
