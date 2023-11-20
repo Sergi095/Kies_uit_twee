@@ -1,6 +1,6 @@
 # Publieksonderzoek: Kies uit Twee
 
-This repository contains a work in progress of the experimental setup of a psychology study. 
+This repository contains a work in progress of the experimental setup of a psychology study from the Vrije Universiteit Amsterdam. 
 
 The study is designed to run with Jatos.
 
