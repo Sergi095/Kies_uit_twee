@@ -110,7 +110,6 @@ export async function displayImages(question,
         imageDiv.appendChild(image);
     });
     // document.body.appendChild(imageDiv);
-    return selectedImages;
 }
 
 
