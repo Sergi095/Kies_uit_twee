@@ -1,3 +1,4 @@
+// CHANGE THIS PART TO CHANGE WHAT IS BEING DISPLAYED ON THE SCREEN
 export const questionDict = {"Question 1, Preferences A1-8": ["flags", "frames", "A1-8"],
                              "Question 2, Preferences B1-8": ["flags", "frames", "B1-8"],
                              "Question 3, Preferences C1-8": ["flags", "frames", "C1-8"],
@@ -94,12 +95,13 @@ export async function displayImages(question,
         image.alt = img.slice(5, -4);
         image.title = img.slice(5, -4);
         image.addEventListener("click", handleClick(question, name, currentImages, selectedImages, winnerImages));
-        image.style.width = "100px";
-        image.style.height = "100px";
-        image.style.border = '2px solid black';
+        // image.style.flex = "1 0 auto"; // Allow the image to grow and shrink, but not shrink below its intrinsic size
+        image.style.minWidth = "110px"; // Set the minimum width
+        image.style.minHeight = "110px"; // Set the minimum height
+        image.style.objectFit = "contain"; // or "cover"
         image.style.marginRight = "10px"; // Add margin to space out the images
         image.style.opacity = "0.8"; // Set the opacity to 0.8 to make the background more transparent
-        image.style.borderRadius = "10px"; // Add rounded corners to the images
+        // image.style.borderRadius = "10px"; // Add rounded corners to the images
         imageDiv.appendChild(image);
     });
     // document.body.appendChild(imageDiv);
@@ -195,6 +197,7 @@ export async function displayWinnerImages(winnerImages, name) {
         image2.src = loadingImage.src;
         image2.style.width = "100px";
         image2.style.height = "100px";
+        // console.log("here");
         // loadingAnimation.style.display = 'block';
         let combinedImageSrc = await combineImages(winnerImages);
         // Hide loading animation

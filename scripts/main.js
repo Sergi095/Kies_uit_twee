@@ -9,6 +9,7 @@ export async function startMain() {
     // Get an array of the keys in questionDict
     
 
+    // jatos.onLoad(async function () { // jatos.onLoad uncomment !!
 
     let questions = Object.keys(questionDict);
 
@@ -31,19 +32,28 @@ export async function startMain() {
 
         
         for (let name of categories) {
-            displayWinnerImages();
+            await displayWinnerImages();
             
             let currentImages = await getImages(name);
             document.getElementById('image-container').innerHTML = '';
             // console.log(currentImages);
             let selectedImages = [];
             // document.getElementById("image-container").innerHTML = '';
-            displayImages(question, name, currentImages, selectedImages, winnerImages);
+            await displayImages(question, name, currentImages, selectedImages, winnerImages);
 
             // Wait for currentImages to be exhausted
-            while (currentImages.length > 0) {
+            // console.log(`currentImages while loop: ${currentImages}`);
+            
+            while (currentImages.length >= 0) {
+                // console.log(`selectedImages while loop: ${selectedImages}`)
                 await new Promise(resolve => setTimeout(resolve, 1000));
+            //     console.log(`currentImages.length while loop: ${currentImages.length}`);
+                if (currentImages.length === 0 && selectedImages.length === 1) {
+                break;
+                }
             }
+
+
             // console.log(winnerImages);
             // displayWinnerImages(winnerImages, name);
         }
@@ -85,7 +95,7 @@ export async function startMain() {
         
     }
 
-        
+// }); // jatos.onLoad uncomment !!
 
 }
 
