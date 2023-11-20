@@ -87,6 +87,7 @@ export async function startMain() {
                 resolve();
                 // If it's the last question, redirect to end_experiment.html
                 if (currentIndex === keys.length - 1) {
+                    // jatos.endStudy(answers); // jatos.onLoad uncomment !!
                     window.location.href = 'end_experiment.html';
                 }
             };

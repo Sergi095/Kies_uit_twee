@@ -24,12 +24,16 @@ let images = [];
 if (array_names.includes(name)) {
     if (name == "flags" || name == "frames") {
         const response = await fetch(`../images/${name}/${name}_list.json`);
+        // const response = await fetch(`images/${name}/${name}_list.json`); //Jatos
+
         const data = await response.json();
         data.forEach(element => {
             images.push(element.name);
         });
     } else {
         const response = await fetch(`../images/pictos/${name}/${name}_list.json`);
+        // const response = await fetch(`images/pictos/${name}/${name}_list.json`); //Jatos
+
         const data = await response.json();
 
         data.forEach(element => {
@@ -91,6 +95,7 @@ export async function displayImages(question,
     selectedImages.forEach(img => {
         let image = document.createElement("img");
         image.src = `../images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${img}`;
+        // image.src = `images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${img}`; //Jatos
         image.id = img;
         image.alt = img.slice(5, -4);
         image.title = img.slice(5, -4);
@@ -171,7 +176,8 @@ export async function displayWinnerImages(winnerImages, name) {
     
     
     let loadingImage = new Image();
-    loadingImage.src = '../images/loading_gif/loading-icon.gif';
+    loadingImage.src = '../images/loading_gif/loading-icon.gif'; 
+    // loadingImage.src = 'images/loading_gif/loading-icon.gif'; //Jatos
     if (!winnerImages || winnerImages.length === 0) { 
         // Set the source to an empty image placeholder
         // console.log(`There are no winner images: ${winnerImages}`)
@@ -187,6 +193,7 @@ export async function displayWinnerImages(winnerImages, name) {
             name = "flags";}
 
         image2.src = `../images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${winnerImage}`;
+        // image2.src = `images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${winnerImage}`; //Jatos
         image2.alt = winnerImage.slice(5, -4);
         image2.title = winnerImage.slice(5, -4);
     }
@@ -243,6 +250,7 @@ export async function combineImages(imageFileNames) {
             name = "F1-8";
         }
         img.src = `../images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${fileName}`;
+        // img.src = `images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${fileName}`; //Jatos
         await new Promise(resolve => { img.onload = resolve; }); // Wait for image to load
         return img;
     }));
