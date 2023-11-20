@@ -106,6 +106,7 @@ export async function displayImages(question,
         image.style.objectFit = "contain"; // or "cover"
         image.style.marginRight = "10px"; // Add margin to space out the images
         image.style.opacity = "0.8"; // Set the opacity to 0.8 to make the background more transparent
+        image.style.cursor = "pointer"; // Add pointer cursor to the images
         // image.style.borderRadius = "10px"; // Add rounded corners to the images
         imageDiv.appendChild(image);
     });
