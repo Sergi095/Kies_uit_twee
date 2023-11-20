@@ -18,7 +18,13 @@ export const array_names = ["flags",
                             "F1-8"];
 
 
-// export let unselectedChoices = [];
+export let unselectedChoices = {};
+let unselectedChoicesArray = [];
+
+
+export let timePerQuestion = {};
+// let lastClickTime = null TODO: add timing functionality
+
 
 
 export async function getImages(name) {
@@ -63,10 +69,10 @@ function getRandomImage(images) {
 
 
 export async function displayImages(question, 
-                              name, 
-                              currentImages, 
-                              selectedImages,
-                              winnerImages) {
+                                    name, 
+                                    currentImages, 
+                                    selectedImages,
+                                    winnerImages) {
 
 
     let imageDiv = document.getElementById("image-container");
@@ -75,12 +81,7 @@ export async function displayImages(question,
     imageDiv.style.flexWrap = "nowrap";
     imageDiv.style.overflowX = "auto";
 
-    // let container = document.getElementById("image-container");
-    // // container.innerHTML = "";
-    // container.appendChild(imageDiv);
-
     // Display the winner image if there is one but only after the currentImages array is exhausted
-
     if (winnerImages.length !== 0) {
         // displayWinnerImages(winnerImages[winnerImages.length - 1], name);
         await displayWinnerImages(winnerImages, name);
@@ -88,15 +89,16 @@ export async function displayImages(question,
     } else { 
         await displayWinnerImages();
     }
-
     // Initialize selectedImages with 2 random images
     if (selectedImages.length == 0) {
         selectedImages.push(getRandomImage(currentImages));
         selectedImages.push(getRandomImage(currentImages));
     }
 
-    
-    
+    let loadingImage = new Image(); // preloading gif animation
+    loadingImage.src = '../images/loading_gif/loading-icon.gif'; 
+    // loadingImage.src = 'images/loading_gif/loading-icon.gif'; //Jatos
+    if (selectedImages.length == 1) { selectedImages = []; } // reset selectedImages if there is only one image left
     selectedImages.forEach(img => {
         let image = document.createElement("img");
         image.src = `../images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${img}`;
@@ -105,17 +107,22 @@ export async function displayImages(question,
         image.alt = img.slice(5, -4);
         image.title = img.slice(5, -4);
         image.addEventListener("click", handleClick(question, name, currentImages, selectedImages, winnerImages));
-        // image.style.flex = "1 0 auto"; // Allow the image to grow and shrink, but not shrink below its intrinsic size
+        image.addEventListener("touchend", handleClick(question, name, currentImages, selectedImages, winnerImages));
         image.style.minWidth = "110px"; // Set the minimum width
         image.style.minHeight = "110px"; // Set the minimum height
         image.style.objectFit = "contain"; // or "cover"
         image.style.marginRight = "10px"; // Add margin to space out the images
         image.style.opacity = "0.8"; // Set the opacity to 0.8 to make the background more transparent
         image.style.cursor = "pointer"; // Add pointer cursor to the images
-        // image.style.borderRadius = "10px"; // Add rounded corners to the images
+        // gif animation
+        imageDiv.appendChild(loadingImage);
+        setTimeout(() => {
         imageDiv.appendChild(image);
+        loadingImage.remove();
+        }, 500); // Add a delay of 5 seconds before displaying the images
+
+        
     });
-    // document.body.appendChild(imageDiv);
 }
 
 function shuffleArray(array) {
@@ -125,20 +132,25 @@ function shuffleArray(array) {
     }
 }
 
-
 function handleClick(question, name, currentImages, selectedImages, winnerImages) {
 
+    // const currentTime = new Date().getTime(); TODO: add timing functionality
     return async  function (event) {
         // Get the id of the clicked image
         if (event.target.getAttribute('disabled') !== null) {
             return;
         }
+
         let id = event.target.id;
         // console.log(id);
         let unselectedImageIndex = selectedImages.findIndex(img => img !== event.target.id);
+        let unselectedImage = selectedImages[unselectedImageIndex];
+
+        unselectedChoicesArray.push(unselectedImage);
+
+        unselectedChoices[question] = unselectedChoicesArray;
 
         // Add the image to the winnerImages array
-
         if (currentImages.length <= 0) {
             winnerImages.push(id);
         }

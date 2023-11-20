@@ -1,4 +1,4 @@
-import { getImages, displayImages, displayWinnerImages, questionDict } from "./helper.js";
+import { getImages, displayImages, displayWinnerImages, questionDict, unselectedChoices } from "./helper.js";
 
 
 let answers = {};
@@ -45,9 +45,7 @@ export async function startMain() {
             // console.log(`currentImages while loop: ${currentImages}`);
             
             while (currentImages.length >= 0) {
-                // console.log(`selectedImages while loop: ${selectedImages}`)
                 await new Promise(resolve => setTimeout(resolve, 1000));
-            //     console.log(`currentImages.length while loop: ${currentImages.length}`);
                 if (currentImages.length === 0 && selectedImages.length === 1) {
                 break;
                 }
@@ -60,10 +58,9 @@ export async function startMain() {
         // Show the button and wait for it to be clicked before continuing
         let currentIndex = keys.indexOf(question);
         answers[question] = winnerImages;
-
-
         localStorage.setItem('answers', JSON.stringify(answers));
         console.log(answers);
+        console.log(unselectedChoices)
         let button = document.createElement("button");
         // button.textContent = "Next Question";
         if (currentIndex === keys.length - 1) {
