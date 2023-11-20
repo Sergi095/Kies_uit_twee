@@ -18,6 +18,9 @@ export const array_names = ["flags",
                             "F1-8"];
 
 
+// export let unselectedChoices = [];
+
+
 export async function getImages(name) {
 
 let images = [];
@@ -91,6 +94,8 @@ export async function displayImages(question,
         selectedImages.push(getRandomImage(currentImages));
         selectedImages.push(getRandomImage(currentImages));
     }
+
+    
     
     selectedImages.forEach(img => {
         let image = document.createElement("img");
@@ -111,6 +116,13 @@ export async function displayImages(question,
         imageDiv.appendChild(image);
     });
     // document.body.appendChild(imageDiv);
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
 }
 
 
@@ -135,15 +147,22 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
         // Remove the image from selectedImages
         if (currentImages.length > 0) {
             selectedImages[unselectedImageIndex] = getRandomImage(currentImages);
-        } else {
+            // selectedImages.push(getRandomImage(currentImages));
+            // selectedImages.splice(unselectedImageIndex, 1);
+        } 
+        else {
             selectedImages.splice(unselectedImageIndex, 1);
         }
+
+        // suffle selectedImages array after each click
+        shuffleArray(selectedImages);
+
+        
+
         document.querySelectorAll("img").forEach(img => img.remove());
         // console.log(currentImages);
         // console.log(currentImages.length);
         
-        // Add a new image to selectedImages
-        // selectedImages.push(getRandomImage(currentImages));
         
         // console.log(winnerImages);
         // Display the images again
