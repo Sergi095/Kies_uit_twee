@@ -181,6 +181,7 @@ export async function displayWinnerImages(winnerImages, name) {
         // Set the source to an empty image placeholder
         // console.log(`There are no winner images: ${winnerImages}`)
         image2.src = `../images/empty_flag/empty_flag.png`;
+        // image2.src = `images/empty_flag/empty_flag.png`; //Jatos
         image2.alt = "empty flag";
         image2.title = "empty flag";
     }
