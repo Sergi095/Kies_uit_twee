@@ -98,7 +98,7 @@ function answersToCsv(iterations) {
     csv += 'iteration,category,question,optionLeft,optionRight,chosen,unchosen,timeToClick\n';
     for (let i = 0; i < iterations.length; i++) {
         let iteration = iterations[i];
-        let category = iteration.category;
+        let category = iteration.type;
         let question = iteration.question;
         let optionLeft = iteration.optionLeft;
         let optionRight = iteration.optionRight;

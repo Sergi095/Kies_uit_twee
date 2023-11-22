@@ -304,13 +304,22 @@ export async function combineImages(imageFileNames) {
     bigImage.height *= 1.5;
 
     let mediumImage = images[1];
-    mediumImage.width *= 1.5; // Increase the size of the second image by 50%
+
+    mediumImage.width *= 1.5; 
     mediumImage.height *= 1.5;
+    
 
     let smallImage = images[2]; // The third image remains the same size
     if (smallImage)
-    {smallImage.width *= 0.5; 
-    smallImage.height *= 0.5;}
+    {if (imageFileNames[1].includes("triangle")) {
+        
+    smallImage.width *= 0.5; 
+    smallImage.height *= 0.5;
+        } else {
+            smallImage.width *= 1; 
+            smallImage.height *= 1;
+        }
+    }
 
     // Calculate the total width and maximum height of the images
     let totalWidth = Math.max(bigImage.width, mediumImage.width, smallImage ? smallImage.width : 0);
