@@ -18,12 +18,7 @@ export const array_names = ["flags",
                             "F1-8"];
 
 
-export let unselectedChoices = {};
-let unselectedChoicesArray = [];
-
-
-export let timePerQuestion = {};
-// let lastClickTime = null TODO: add timing functionality
+export let iterations = [];
 
 
 
@@ -97,6 +92,7 @@ export async function displayImages(question,
 
     let loadingImage = new Image(); // preloading gif animation
     loadingImage.src = '../images/loading_gif/loading-icon.gif'; 
+    let startTime = new Date();
     // loadingImage.src = 'images/loading_gif/loading-icon.gif'; //Jatos
     if (selectedImages.length == 1) { selectedImages = []; } // reset selectedImages if there is only one image left
     selectedImages.forEach(img => {
@@ -106,8 +102,8 @@ export async function displayImages(question,
         image.id = img;
         image.alt = img.slice(5, -4);
         image.title = img.slice(5, -4);
-        image.addEventListener("click", handleClick(question, name, currentImages, selectedImages, winnerImages));
-        image.addEventListener("touchend", handleClick(question, name, currentImages, selectedImages, winnerImages));
+        image.addEventListener("click", handleClick(question, name, currentImages, selectedImages, winnerImages, startTime));
+        image.addEventListener("touchend", handleClick(question, name, currentImages, selectedImages, winnerImages, startTime));
         image.style.minWidth = "110px"; // Set the minimum width
         image.style.minHeight = "110px"; // Set the minimum height
         image.style.objectFit = "contain"; // or "cover"
@@ -132,7 +128,7 @@ function shuffleArray(array) {
     }
 }
 
-function handleClick(question, name, currentImages, selectedImages, winnerImages) {
+function handleClick(question, name, currentImages, selectedImages, winnerImages, startTime) {
 
     // const currentTime = new Date().getTime(); TODO: add timing functionality
     return async  function (event) {
@@ -145,10 +141,15 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
         // console.log(id);
         let unselectedImageIndex = selectedImages.findIndex(img => img !== event.target.id);
         let unselectedImage = selectedImages[unselectedImageIndex];
-
-        unselectedChoicesArray.push(unselectedImage);
-
-        unselectedChoices[question] = unselectedChoicesArray;
+        let data = {
+            type: name,
+            question: question,
+            optionRight: selectedImages[0],
+            optionLeft: selectedImages[1],
+            chosen: id,
+            unchosen: unselectedImage,
+            timeToClick: `${(new Date() - startTime) / 10000} seconds`
+        };
 
         // Add the image to the winnerImages array
         if (currentImages.length <= 0) {
@@ -179,6 +180,11 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
         // console.log(winnerImages);
         // Display the images again
         await displayImages(question, name, currentImages, selectedImages, winnerImages);
+
+
+
+
+        iterations.push(data);
     }
     
 }

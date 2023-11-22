@@ -1,8 +1,4 @@
-import { getImages, displayImages, displayWinnerImages, questionDict, unselectedChoices } from "./helper.js";
-
-
-let answers = {};
-
+import { getImages, displayImages, displayWinnerImages, questionDict, iterations } from "./helper.js";
 
 
 export async function startMain() {
@@ -57,10 +53,9 @@ export async function startMain() {
         }
         // Show the button and wait for it to be clicked before continuing
         let currentIndex = keys.indexOf(question);
-        answers[question] = winnerImages;
-        localStorage.setItem('answers', JSON.stringify(answers));
-        console.log(answers);
-        console.log(unselectedChoices)
+        console.log(iterations);
+        localStorage.setItem('iterations', answersToCsv(iterations));
+        // console.log(unselectedChoices)
         let button = document.createElement("button");
         // button.textContent = "Next Question";
         if (currentIndex === keys.length - 1) {
@@ -84,7 +79,7 @@ export async function startMain() {
                 resolve();
                 // If it's the last question, redirect to end_experiment.html
                 if (currentIndex === keys.length - 1) {
-                    // jatos.endStudy(answers); // jatos.onLoad uncomment !!
+                    // jatos.endStudy(answersToCsv(iterations)); // jatos.onLoad uncomment !!
                     window.location.href = 'end_experiment.html';
                 }
             };
@@ -95,6 +90,24 @@ export async function startMain() {
 
 // }); // jatos.onLoad uncomment !!
 
+}
+
+
+function answersToCsv(iterations) {
+    let csv = '';
+    csv += 'iteration,category,question,optionLeft,optionRight,chosen,unchosen,timeToClick\n';
+    for (let i = 0; i < iterations.length; i++) {
+        let iteration = iterations[i];
+        let category = iteration.category;
+        let question = iteration.question;
+        let optionLeft = iteration.optionLeft;
+        let optionRight = iteration.optionRight;
+        let chosen = iteration.chosen;
+        let unchosen = iteration.unchosen;
+        let timeToClick = iteration.timeToClick;
+        csv += `${i},${category},${question},${optionLeft},${optionRight},${chosen},${unchosen},${timeToClick}\n`;     
+    }
+    return csv;
 }
 
 startMain();
