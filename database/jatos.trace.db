@@ -1,4 +1,0 @@
-2023-11-23 13:41:13 jdbc[4]: exception
-org.h2.jdbc.JdbcSQLException: Tabla "play_evolutions" no encontrada
-Table "play_evolutions" not found; SQL statement:
-select id, hash, apply_script, revert_script, state, last_problem from play_evolutions where state like 'applying_%' [42102-197]
