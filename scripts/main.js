@@ -8,7 +8,7 @@ export async function startMain() {
     // jatos.onLoad(async function () { // jatos.onLoad uncomment !!
 
     let questions = Object.keys(questionDict);
-
+    let abortButton = document.createElement('button');
     let keys = Object.keys(questionDict);
     // loop over all questions and loop over all categories for each question
     for (let question of questions) {
@@ -40,6 +40,27 @@ export async function startMain() {
             // Wait for currentImages to be exhausted
             // console.log(`currentImages while loop: ${currentImages}`);
             
+
+            // ABORT BUTTON
+            if (!abortButton) {
+                abortButton = document.createElement('button');
+                abortButton.id = 'abort-button';
+                abortButton.style.display = "block";
+                abortButton.style.position = "bottom"; // Change position to relative
+                abortButton.style.bottom = "100%"; // Change top to bottom
+                abortButton.style.left = "10%";
+                abortButton.style.right = "10%";
+                abortButton.style.transform = "translate(20%, 50%)";
+                document.body.appendChild(abortButton);
+            }
+            // let abort = false;
+            abortButton.textContent = "Abort";
+
+            abortButton.addEventListener('click', () => {
+                localStorage.setItem('iterations', answersToCsv(iterations));
+                window.location.href = 'end_experiment.html';
+            });
+            document.body.appendChild(abortButton);
             while (currentImages.length >= 0) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 if (currentImages.length === 0 && selectedImages.length === 1) {
