@@ -4,7 +4,7 @@ This repository contains the code for a work-in-progress psychology study at Vri
 
 ## Getting Started
 
-To clone this repository you need to run the following command `git lfs clone`.
+To clone this repository you need to run the following command `git lfs clone https://github.com/Sergi095/Kies_uit_twee.git`.
 
 The repository includes a ZIP file that contains the experiment ready to run in JATOS. 
 
