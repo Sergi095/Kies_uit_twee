@@ -80,7 +80,8 @@ export async function startMain() {
         let button = document.createElement("button");
         // button.textContent = "Next Question";
         if (currentIndex === keys.length - 1) {
-            button.textContent = "Exit";
+            abortButton.remove();
+            button.textContent = " Exit ";
         } else {
             button.textContent = "Next Question";
         }
