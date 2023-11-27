@@ -8,6 +8,8 @@ To clone this repository you need to run the following command `git lfs clone ht
 
 The repository includes a ZIP file that contains the experiment ready to run in JATOS. 
 
+To run this experiment, it is neccesary to have Node.js installed in your system.
+
 ## Running the Experiment
 
 To run the experiment with JATOS, use the appropriate loader script for your operating system:
