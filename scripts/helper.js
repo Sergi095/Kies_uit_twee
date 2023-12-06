@@ -1,11 +1,10 @@
 // CHANGE THIS PART TO CHANGE WHAT IS BEING DISPLAYED ON THE SCREEN
-export const questionDict = {"Question 1, Preferences A1-8": ["flags", "frames", "A1-8"],
-                             "Question 2, Preferences B1-8": ["flags", "frames", "B1-8"],
-                             "Question 3, Preferences C1-8": ["flags", "frames", "C1-8"],
-                             "Question 4, Preferences D1-8": ["flags", "frames", "D1-8"],
-                             "Question 5, Preferences E1-8": ["flags", "frames", "E1-8"],
-                             "Question 6, Preferences F1-8": ["flags", "frames", "F1-8"]};
-
+export const questionDict = {"Question 1: Preferences A1-8": ["flags", "frames", "A1-8"],
+                             "Question 2: Preferences B1-8": ["flags", "frames", "B1-8"],
+                             "Question 3: Preferences C1-8": ["flags", "frames", "C1-8"],
+                             "Question 4: Preferences D1-8": ["flags", "frames", "D1-8"],
+                             "Question 5: Preferences E1-8": ["flags", "frames", "E1-8"],
+                             "Question 6: Preferences F1-8": ["flags", "frames", "F1-8"]};
 
 
 export const array_names = ["flags", 
@@ -59,10 +58,11 @@ function getRandomImage(images) {
     images.splice(randomIndex, 1);
     return image;
 }
-
+function takeOutPng(String_){
+    let nameNum = String_.length - 4;
+   return String_.slice(0, nameNum);
+  }
 // functions to display the images and select the winner
-
-
 export async function displayImages(question, 
                                     name, 
                                     currentImages, 
@@ -100,8 +100,8 @@ export async function displayImages(question,
         image.src = `../images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${img}`;
         // image.src = `images/${name == "flags" || name == "frames" ? name : "pictos/" + name}/${img}`; //Jatos
         image.id = img;
-        image.alt = img.slice(5, -4);
-        image.title = img.slice(5, -4);
+        image.alt = takeOutPng(img);
+        image.title = takeOutPng(img);
         image.addEventListener("click", handleClick(question, name, currentImages, selectedImages, winnerImages, startTime));
         image.addEventListener("touchend", handleClick(question, name, currentImages, selectedImages, winnerImages, startTime));
         image.style.minWidth = "110px"; // Set the minimum width
@@ -115,7 +115,7 @@ export async function displayImages(question,
         setTimeout(() => {
         imageDiv.appendChild(image);
         loadingImage.remove();
-        }, 500); // Add a delay of 5 seconds before displaying the images
+        }, 500); // Add a delay of 0.55 seconds before displaying the images
 
         
     });
@@ -144,13 +144,12 @@ function handleClick(question, name, currentImages, selectedImages, winnerImages
         let data = {
             type: name,
             question: question,
-            optionRight: selectedImages[0],
-            optionLeft: selectedImages[1],
-            chosen: id,
-            unchosen: unselectedImage,
-            timeToClick: `${(new Date() - startTime) / 10000} seconds`
+            optionRight: takeOutPng(selectedImages[0]),
+            optionLeft: takeOutPng(selectedImages[1]),
+            chosen: takeOutPng(id),
+            unchosen: takeOutPng(unselectedImage),
+            timeToClick: `${((new Date() - startTime - 500) / 1000)}`, // -500 to account for the 0.5 second delay
         };
-
         // Add the image to the winnerImages array
         if (currentImages.length <= 0) {
             winnerImages.push(id);

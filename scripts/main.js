@@ -51,6 +51,7 @@ export async function startMain() {
                 abortButton.style.left = "10%";
                 abortButton.style.right = "10%";
                 abortButton.style.transform = "translate(20%, 50%)";
+                abortButton.style.cursor = "pointer";                
                 document.body.appendChild(abortButton);
             }
             // let abort = false;
@@ -91,6 +92,7 @@ export async function startMain() {
         button.style.left = "10%";
         button.style.right = "10%";
         button.style.transform = "translate(20%, 50%)";
+        button.style.cursor = "pointer";
         document.body.appendChild(button);
         let images = document.querySelectorAll('img');
         images.forEach(img => img.setAttribute('disabled', ''));
